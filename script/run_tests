@@ -23,10 +23,13 @@ def GetTestsToRun(args):
       tests.append(os.path.join(build_dir, file_name))
   return tests
 
-def RunTests(binary_tests):
+def RunTests(binary_tests, args):
   if binary_tests:
     results = []
     for test in binary_tests:
+      test_args = [test]
+      if args.output_file:
+          test_args.append('-gtest_output=xml:'+args.output_file)
       results.append((os.path.basename(test),
                       subprocess.call([test]) == 0))
     failed = [test
@@ -47,11 +50,12 @@ def RunTests(binary_tests):
 def main():
   parser = argparse.ArgumentParser(description='Run Chromium tests')
   parser.add_argument('-t', '--target_arch', default='x64', help='x64 or ia32')
-  tests = GetTestsToRun(parser.parse_args())
+  parser.add_argument('-o', '--output_file', help='File to use for XML results')
+  args = parser.parse_args()
+  tests = GetTestsToRun(args)
   if not tests:
     return 1
-  return RunTests(tests)
+  return RunTests(tests, args)
 
 if __name__ == '__main__':
   sys.exit(main())
-

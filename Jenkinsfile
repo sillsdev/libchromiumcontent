@@ -52,7 +52,9 @@ pipeline {
                 sh 'script/update --clean -t $TARGET_ARCH'
                 sh 'script/build -t $TARGET_ARCH -c $COMPONENT'
                 sh 'script/build -t $TARGET_ARCH -c ffmpeg'
+                sh 'script/build -t $TARGET_ARCH -c test'
                 sh 'script/create-dist -t $TARGET_ARCH -c $COMPONENT'
+                sh 'script/run_tests -t $TARGET_ARCH -o test-results.xml'
                 script {
                   GIT_COMMIT = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
                 }
@@ -62,11 +64,13 @@ pipeline {
                   }
                 }
                 fileOperations([fileRenameOperation(destination: 'libchromiumcontent-static-osx.tar.bz2', source: 'libchromiumcontent-static.tar.bz2')])
+                fileOperations([fileRenameOperation(destination: 'libchromiumcontent-static-osx.test-results.xml', source: 'test-results.xml')])
               }
             }
             post {
               always {
                 archive 'libchromiumcontent-static-osx.tar.bz2'
+                archive 'libchromiumcontent-static-osx.test-results.xml'
                 cleanWs()
               }
             }
@@ -122,7 +126,9 @@ pipeline {
               sh 'script/update --clean -t $TARGET_ARCH'
               sh 'script/build -t $TARGET_ARCH -c $COMPONENT'
               sh 'script/build -t $TARGET_ARCH -c ffmpeg'
+              sh 'script/build -t $TARGET_ARCH -c test'
               sh 'script/create-dist -t $TARGET_ARCH -c $COMPONENT'
+              sh 'script/run_tests -t $TARGET_ARCH -o test-results.xml'
               script {
                 GIT_COMMIT = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
               }
@@ -132,11 +138,13 @@ pipeline {
                 }
               }
               fileOperations([fileRenameOperation(destination: 'libchromiumcontent-mas-static.tar.bz2', source: 'libchromiumcontent-static.tar.bz2')])
+              fileOperations([fileRenameOperation(destination: 'libchromiumcontent-mas-static.test-results.xml', source: 'test-results.xml')])
             }
           }
           post {
             always {
               archive 'libchromiumcontent-mas-static.tar.bz2'
+              archive 'libchromiumcontent-mas-static.test-results.xml'
               cleanWs()
             }
           }
