@@ -52,7 +52,7 @@ pipeline {
                 sh 'script/update --clean -t $TARGET_ARCH'
                 sh 'script/build -t $TARGET_ARCH -c $COMPONENT'
                 sh 'script/build -t $TARGET_ARCH -c ffmpeg'
-                sh 'script/build -t $TARGET_ARCH -c test'
+                sh 'script/build -t $TARGET_ARCH -c tests'
                 sh 'script/create-dist -t $TARGET_ARCH -c $COMPONENT'
                 sh 'script/run_tests -t $TARGET_ARCH -o test-results.xml'
                 script {
@@ -126,7 +126,7 @@ pipeline {
               sh 'script/update --clean -t $TARGET_ARCH'
               sh 'script/build -t $TARGET_ARCH -c $COMPONENT'
               sh 'script/build -t $TARGET_ARCH -c ffmpeg'
-              sh 'script/build -t $TARGET_ARCH -c test'
+              sh 'script/build -t $TARGET_ARCH -c tests'
               sh 'script/create-dist -t $TARGET_ARCH -c $COMPONENT'
               sh 'script/run_tests -t $TARGET_ARCH -o test-results.xml'
               script {
